@@ -1,10 +1,11 @@
 {
   "jvmPackage": "com.barrettotte.models",
-  "schemaDirectory": "C:\\_Personal\\Model-Generator\\json-schema\\",
+  "schemaDirectory": "./json-schema/",
   "languages": [
     {
       "name": "java8",
-      "output": "C:\\_Personal\\Model-Generator\\generated\\java8",
+      "extension": "java",
+      "output": "generated/java8",
       "annotation": {
         "type": "jackson2",
         "includes": [

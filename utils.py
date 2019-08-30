@@ -14,3 +14,6 @@ def write_file_json(file_path, buffer):
 
 def ends_with(s,x):
     return s[-(len(x)):] == x
+
+def mkdir_ine(dir_path):
+    if not os.path.exists(dir_path): os.makedirs(dir_path)

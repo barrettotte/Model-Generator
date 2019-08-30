@@ -78,15 +78,35 @@ class gen_java8:
         if t == 'object':   return "Object"
         raise Exception("Invalid java type '" + t + "'")
 
+    def bld_getset(self, schema):
+        lines = []
+        for key,val in schema['properties'].items():
+            prop_type = self.get_java_type(val["type"])
+            if self.annotation_config:
+                json_prop = "@JsonProperty(\"" + key + "\")"
+                
+            lines.append("    " + "\n    ".join([
+                json_prop,
+                "public " + prop_type + " get" + key.capitalize() + "() {",
+                "    return " + key + ";",
+                "}",
+                json_prop,
+                "public void set" + key.capitalize() + "(final " + prop_type + ' ' + key + ") {",
+                "    this." + key + " = " + key + ';',
+                "}"
+            ]))
+        return "\n\n".join(lines)
+
 
     def generate(self, schema, obj_path):
         data = [
             self.bld_pkg_dec(obj_path),
             self.bld_class_head(schema, obj_path),
-            self.bld_props(schema),
+            self.bld_props(schema) + '\n',
+            self.bld_getset(schema),
             '}'
         ]
 
         model = '\n'.join(data)
         #print(model + '\n')
-        return model+'\n\n\n'
+        return model + '\n'

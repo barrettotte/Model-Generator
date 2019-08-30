@@ -22,7 +22,7 @@ def parse_schema(lang, schema, obj_path, config):
     return generator.generate(schema, obj_path)
 
 def slice_path(subdir, root):
-    split = subdir.split("\\")
+    split = subdir.split("/")
     rel_path = split[split.index(root):]
     return [] if len(rel_path) == 1 else rel_path[1:]
 
@@ -30,21 +30,22 @@ def slice_path(subdir, root):
 def main():
     config = get_config("./config.json")
     validate_config(config)
-    in_path = config['schemaDirectory']
-    in_path = in_path[:-1] if utils.ends_with(in_path, "\\") else in_path
+    in_path = config["schemaDirectory"]
+    in_path = in_path[:-1] if utils.ends_with(in_path, '/') else in_path
 
-    root = in_path.split('\\')[-1]
-
+    root = in_path.split('/')[-1]
+    
     out = ''
+
     for subdir, _, files in os.walk(in_path):
         for file in files:
             schema = read_schema(os.path.join(subdir, file))
-            for lang in config['languages']:
-                obj_path = slice_path(subdir, root) + [file[:-5]] # ['Common','Thing']
-                
-                out += (parse_schema(lang, schema, obj_path, config) + "\n")
-
-    with open('test.java', 'w+') as f:
-        f.write(out)
+            for lang in config["languages"]:
+                schema_path = [file[:-5]]
+                obj_path = slice_path(subdir, root) + schema_path # ['Common','Thing']
+                utils.mkdir_ine(lang["output"])
+                file_path = lang["output"] + '/' + schema_path[-1] + '.'
+                with open(file_path + lang["extension"], 'w+') as f:
+                    f.write(parse_schema(lang, schema, obj_path, config) + '\n')
 
 if __name__ == "__main__" : main()
