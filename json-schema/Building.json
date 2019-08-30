@@ -1,0 +1,9 @@
+{
+    "id": "http://json-schema.org/thing",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Building",
+    "description": "A building",
+    "type": "object",
+    "extends": "Common/Thing.json",
+    "properties": {}
+}

@@ -1,0 +1,10 @@
+{
+  "jvmPackage": "com.barrettotte.models",
+  "schemaDirectory": "C:\\_Personal\\POC-Model-Generator\\json-schema\\",
+  "languages": [
+    {
+      "name": "java8",
+      "output": "C:\\_Personal\\POC-Model-Generator\\generated\\java8"
+    }
+  ]
+}

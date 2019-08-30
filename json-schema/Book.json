@@ -1,0 +1,22 @@
+{
+  "id": "http://json-schema.org/thing",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Book",
+  "description": "A book",
+  "type": "object",
+  "extends": "Common/Thing.json",
+  "properties": {
+    "genre": {
+      "type": "string"
+    },
+    "pageLength": {
+      "type": "number"
+    },
+    "isbn": {
+      "type": "string"
+    },
+    "author": {
+      "type": "object"
+    }
+  }
+}
