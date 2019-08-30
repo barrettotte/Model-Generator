@@ -1,7 +1,19 @@
 # Model-Generator
 
 
-Generate basic models from JSON schema
+Generate code for basic models from JSON schema. 
+
+
+## Languages
+- [ ] Java
+- [ ] Groovy
+- [ ] Kotlin
+- [ ] TypeScript
+
+
+## Possible Enhancements
+* Java: Constructor generation
+* Java: toString, hashCode, equals
 
 
 ## Example Input
@@ -33,4 +45,4 @@ Generate basic models from JSON schema
 * https://schema.org/docs/schemas.html
 * https://json-schema.org/understanding-json-schema/index.html
 * https://www.jsonschemavalidator.net/
-
+* Inspiration https://app.quicktype.io/

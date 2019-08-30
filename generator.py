@@ -17,7 +17,7 @@ def read_schema(fp):
 
 def parse_schema(lang, schema, obj_path, config):
     generator = {
-        'java8': gen_java8(config)
+        'java8': gen_java8(config, lang)
     }[lang['name']]
     return generator.generate(schema, obj_path)
 

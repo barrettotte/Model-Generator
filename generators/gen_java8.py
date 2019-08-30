@@ -1,8 +1,11 @@
 
 class gen_java8:
 
-    def __init__(self, config):
+    def __init__(self, config, lang_config):
         self.project_pkg = config['jvmPackage']
+        self.annotation_config = None
+        if "annotation" in lang_config.keys():
+            self.annotation_config = lang_config['annotation']
 
     def bld_pkg_dec(self, obj_path):
         rel_pkg = '.'.join([op.lower() for op in obj_path[:-1]])
@@ -26,16 +29,32 @@ class gen_java8:
             extends += [parents[:-5]]
         return extends
 
+    def has_jackson(self):
+        return self.annotation_config and self.annotation_config["type"] in ["jackson2"]
+
+    def add_jackson(self):
+        jackson = [ "import com.fasterxml.jackson.annotation.JsonInclude;",
+          "import com.fasterxml.jackson.annotation.JsonProperty;",
+          "import com.fasterxml.jackson.annotation.JsonPropertyOrder;\n"
+        ]
+        if "includes" in self.annotation_config.keys():
+            for inc in self.annotation_config["includes"]:
+                jackson.append("@JsonInclude(JsonInclude.Include." + inc + ")")
+        return jackson
+
     def bld_class_head(self, schema, obj_path):
-        header = ''
-        imports = []
         extends = self.get_extends(schema)
+        imports = []
+
         for ext in extends:
             imp = self.bld_pkg_imp([ext], obj_path[:-1])
             if imp: imports.append(imp)
-        header += '\n'.join(imports)
+
+        header = '\n'.join(imports)
         if len(imports) > 0:
             header += '\n\n'
+        if(self.has_jackson()):
+            header += '\n'.join(self.add_jackson()) + '\n'
         header += "public class " + obj_path[-1].capitalize()
 
         if len(extends) > 0:
@@ -44,16 +63,30 @@ class gen_java8:
                 header += '.'.join(ext[-1]) if len(extends) > 1 else ext.split('/')[-1] 
         return header + " {"
 
-    
+    def bld_props(self, schema):
+        props = []
+        for key,val in schema['properties'].items():
+            props.append("    private " + self.get_java_type(val["type"]) + " " + key + ";\n")
+        return '\n' + '\n'.join(props)
+
+
+    # TODO: Big Decimal, Double
+    def get_java_type(self, t):
+        if t == 'string':   return "String"
+        if t == 'number':   return "float" 
+        if t == 'integer':  return "int"
+        if t == 'object':   return "Object"
+        raise Exception("Invalid java type '" + t + "'")
+
+
     def generate(self, schema, obj_path):
         data = [
             self.bld_pkg_dec(obj_path),
             self.bld_class_head(schema, obj_path),
-            '\n}'
+            self.bld_props(schema),
+            '}'
         ]
+
         model = '\n'.join(data)
-        print(model + '\n')
-        
+        #print(model + '\n')
         return model+'\n\n\n'
-
-

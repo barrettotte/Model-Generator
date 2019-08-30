@@ -4,7 +4,13 @@
   "languages": [
     {
       "name": "java8",
-      "output": "C:\\_Personal\\Model-Generator\\generated\\java8"
+      "output": "C:\\_Personal\\Model-Generator\\generated\\java8",
+      "annotation": {
+        "type": "jackson2",
+        "includes": [
+          "NON_NULL"
+        ]
+      }
     }
   ]
 }
