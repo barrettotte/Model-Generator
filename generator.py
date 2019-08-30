@@ -44,7 +44,7 @@ def main():
                 
                 out += (parse_schema(lang, schema, obj_path, config) + "\n")
 
-    with open('test.txt', 'w+') as f:
+    with open('test.java', 'w+') as f:
         f.write(out)
 
 if __name__ == "__main__" : main()
