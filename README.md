@@ -11,6 +11,11 @@ Generate code for basic models from JSON schema.
 - [ ] TypeScript
 
 
+## To Do
+* Protected properties?
+* folder structure for generated java classes
+
+
 ## Possible Enhancements
 * Java: Constructor generation
 * Java: toString, hashCode, equals

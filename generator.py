@@ -26,6 +26,14 @@ def slice_path(subdir, root):
     rel_path = split[split.index(root):]
     return [] if len(rel_path) == 1 else rel_path[1:]
 
+def make_dir_path(lang, obj_path):
+    utils.mkdir_ine(lang["output"])
+    dir_path = lang["output"] + '/' + '/'.join(obj_path[0:-1])
+    if lang["namingConvention"] == "jvm":
+        dir_path = dir_path.lower()
+    utils.mkdir_ine(dir_path)
+    return dir_path
+
 
 def main():
     config = get_config("./config.json")
@@ -36,16 +44,18 @@ def main():
     root = in_path.split('/')[-1]
     
     out = ''
+    schemas = {}
 
     for subdir, _, files in os.walk(in_path):
         for file in files:
             schema = read_schema(os.path.join(subdir, file))
+            schema_path = [file[:-5]]
+            obj_path = slice_path(subdir, root) + schema_path # ['Common','Thing']
+            print(obj_path)
             for lang in config["languages"]:
-                schema_path = [file[:-5]]
-                obj_path = slice_path(subdir, root) + schema_path # ['Common','Thing']
-                utils.mkdir_ine(lang["output"])
-                file_path = lang["output"] + '/' + schema_path[-1] + '.'
-                with open(file_path + lang["extension"], 'w+') as f:
+                dir_path = make_dir_path(lang, obj_path)
+                file_path = dir_path + '/' + schema_path[-1] + '.' + lang["extension"]
+                with open(file_path, 'w+') as f:
                     f.write(parse_schema(lang, schema, obj_path, config) + '\n')
 
 if __name__ == "__main__" : main()

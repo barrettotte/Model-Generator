@@ -4,6 +4,7 @@
   "languages": [
     {
       "name": "java8",
+      "namingConvention": "jvm",
       "extension": "java",
       "output": "generated/java8",
       "annotation": {
