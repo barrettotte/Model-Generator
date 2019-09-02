@@ -21,7 +21,7 @@ def parse_schema(lang, schema, obj_path, config):
     }[lang['name']]
     return generator.generate(schema, obj_path)
 
-def slice_path(subdir, root):
+def split_path(subdir, root):
     split = subdir.split("/")
     rel_path = split[split.index(root):]
     return [] if len(rel_path) == 1 else rel_path[1:]
@@ -50,11 +50,12 @@ def main():
         for file in files:
             schema = read_schema(os.path.join(subdir, file))
             schema_path = [file[:-5]]
-            obj_path = slice_path(subdir, root) + schema_path # ['Common','Thing']
-            print(obj_path)
+            obj_path = split_path(subdir, root) + schema_path # ['Common','Thing']
+            
             for lang in config["languages"]:
                 dir_path = make_dir_path(lang, obj_path)
                 file_path = dir_path + '/' + schema_path[-1] + '.' + lang["extension"]
+
                 with open(file_path, 'w+') as f:
                     f.write(parse_schema(lang, schema, obj_path, config) + '\n')
 

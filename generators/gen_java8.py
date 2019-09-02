@@ -1,3 +1,4 @@
+import utils as utils
 
 class gen_java8:
 
@@ -26,7 +27,8 @@ class gen_java8:
         extends = []
         if 'extends' in schema:
             parents = schema['extends']
-            extends += [parents[:-5]]
+            if '$ref' in parents:
+                extends += [parents['$ref'][:-5]]
         return extends
 
     def has_jackson(self):
@@ -55,7 +57,7 @@ class gen_java8:
             header += '\n\n'
         if(self.has_jackson()):
             header += '\n'.join(self.add_jackson()) + '\n'
-        header += "public class " + obj_path[-1].capitalize()
+        header += "public class " + utils.cap_first(obj_path[-1])
 
         if len(extends) > 0:
             header += " extends "
@@ -66,32 +68,56 @@ class gen_java8:
     def bld_props(self, schema):
         props = []
         for key,val in schema['properties'].items():
-            props.append("    private " + self.get_java_type(val["type"]) + " " + key + ";\n")
+            props.append("    private " + self.get_java_type(val) + " " + key + ";\n")
         return '\n' + '\n'.join(props)
 
+    def get_collection(self, val):
+        collection = ''
+        if "items" in val:
+            items = val["items"]
+            t = self.get_java_type(items)
+            if "primitive" in items and items["primitive"]:
+                return t + "[]"
+            if "uniqueItems" in items and items["uniqueItems"]:
+                return "Set<" + t + ">"
+            return "List<" + t + ">"
+        raise Exception("Could not generate array")
+
+    def as_primitive(self, val):
+        t = val["type"]
+        if t == "integer": return "int"
+        if t == "number":  return "float"
+        if t == "boolean": return "boolean"
+        raise Exception("Cannot produce primitive for type '" + t + "'")
 
     # TODO: Big Decimal, Double
-    def get_java_type(self, t):
-        if t == 'string':   return "String"
-        if t == 'number':   return "float" 
-        if t == 'integer':  return "int"
-        if t == 'object':   return "Object"
-        raise Exception("Invalid java type '" + t + "'")
+    def get_java_type(self, val):
+        t = val["type"]
+        if t == "array":   
+            return self.get_collection(val)
+        if "primitive" in val and val["primitive"]:
+            return self.as_primitive(val)
+        if t == "string":  return "String"
+        if t == "number":  return "Float" 
+        if t == "integer": return "Integer"
+        if t == "boolean": return "Boolean"
+        if t == "object":  return "Object"
+        raise Exception("Invalid type '" + t + "'")
 
     def bld_getset(self, schema):
         lines = []
         for key,val in schema['properties'].items():
-            prop_type = self.get_java_type(val["type"])
+            prop_type = self.get_java_type(val)
             if self.annotation_config:
                 json_prop = "@JsonProperty(\"" + key + "\")"
                 
             lines.append("    " + "\n    ".join([
                 json_prop,
-                "public " + prop_type + " get" + key.capitalize() + "() {",
+                "public " + prop_type + " get" + utils.cap_first(key) + "() {",
                 "    return " + key + ";",
                 "}",
                 json_prop,
-                "public void set" + key.capitalize() + "(final " + prop_type + ' ' + key + ") {",
+                "public void set" + utils.cap_first(key) + "(final " + prop_type + ' ' + key + ") {",
                 "    this." + key + " = " + key + ';',
                 "}"
             ]))

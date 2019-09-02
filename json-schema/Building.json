@@ -4,6 +4,12 @@
     "title": "Building",
     "description": "A building",
     "type": "object",
-    "extends": "Common/Thing.json",
-    "properties": {}
+    "extends": {
+        "$ref": "Common/Thing.json"
+    },
+    "properties": {
+        "address": {
+            "type": "object"
+        }
+    }
 }

@@ -11,7 +11,7 @@ public class Book extends Thing {
 
     private String genre;
 
-    private float pageLength;
+    private Float pageLength;
 
     private String isbn;
 
@@ -28,11 +28,11 @@ public class Book extends Thing {
     }
 
     @JsonProperty("pageLength")
-    public float getPagelength() {
+    public Float getPageLength() {
         return pageLength;
     }
     @JsonProperty("pageLength")
-    public void setPagelength(final float pageLength) {
+    public void setPageLength(final Float pageLength) {
         this.pageLength = pageLength;
     }
 

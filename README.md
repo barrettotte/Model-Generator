@@ -21,22 +21,21 @@ Generate code for basic models from JSON schema.
 * Java: toString, hashCode, equals
 
 
-## Example Input
+## Specification
 ```JSON
 {
-    "id": "http://json-schema.org/thing",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Cat",
-    "description": "A cat",
+    "title": "Test schema",
+    "description": "A test schema to show various things",
     "type": "object",
-    "extends": "Common/Thing.json",
+    "extends": {
+        "$ref": "Common/Thing.json"
+    },
     "properties": {
-        "breed": {
+        "name": {
             "type": "string"
         },
-        "color": {
-            "type": "string"
-        }
+        
     }
 }
 ```
@@ -47,6 +46,7 @@ Generate code for basic models from JSON schema.
 
 
 ## References
+* JSON Schema Core https://json-schema.org/latest/json-schema-core.html
 * https://schema.org/docs/schemas.html
 * https://json-schema.org/understanding-json-schema/index.html
 * https://www.jsonschemavalidator.net/

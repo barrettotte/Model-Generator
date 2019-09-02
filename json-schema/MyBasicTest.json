@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "extends": {
+        "$ref": "Common/Thing.json"
+    },
+    "properties": {
+        "myNumArray": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "uniqueItems": true,
+                "primitive": true
+            }
+        },
+        "myNumSet": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "uniqueItems": true
+            }
+        },
+        "myStringList": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "myInt": {
+            "type": "integer"
+        },
+        "myPrimInt": {
+            "type": "integer",
+            "primitive": true
+        },
+        "myPrimBool": {
+            "type": "boolean",
+            "primitive": true
+        },
+        "myNestedList": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "boolean",
+                    "uniqueItems": true
+                }
+            }
+        }
+    }
+}

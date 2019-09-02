@@ -9,8 +9,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Building extends Thing {
 
+    private Object address;
 
 
-
+    @JsonProperty("address")
+    public Object getAddress() {
+        return address;
+    }
+    @JsonProperty("address")
+    public void setAddress(final Object address) {
+        this.address = address;
+    }
 }
 

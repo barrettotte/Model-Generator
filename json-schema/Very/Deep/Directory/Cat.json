@@ -4,7 +4,9 @@
     "title": "Cat",
     "description": "A cat",
     "type": "object",
-    "extends": "Common/Thing.json",
+    "extends": {
+        "$ref": "Common/Thing.json"
+    },
     "properties": {
         "breed": {
             "type": "string"

@@ -17,3 +17,6 @@ def ends_with(s,x):
 
 def mkdir_ine(dir_path):
     if not os.path.exists(dir_path): os.makedirs(dir_path)
+
+def cap_first(s):
+    return s[0].upper() + s[1:]
