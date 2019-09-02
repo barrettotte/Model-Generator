@@ -15,11 +15,14 @@ def read_schema(fp):
     try:    return utils.read_file_json(fp)
     except: print("Could not read schema at " + fp)
 
-def parse_schema(lang, schema, obj_path, config):
-    generator = {
+def parse_schema(generator, schema, obj_path):
+    model = generator.generate(schema, obj_path)
+    return generator.make_code(model)
+
+def get_generator(lang, config):
+    return {
         'java8': gen_java8(config, lang)
     }[lang['name']]
-    return generator.generate(schema, obj_path)
 
 def split_path(subdir, root):
     split = subdir.split("/")
@@ -28,7 +31,7 @@ def split_path(subdir, root):
 
 def make_dir_path(lang, obj_path):
     utils.mkdir_ine(lang["output"])
-    dir_path = lang["output"] + '/' + '/'.join(obj_path[0:-1])
+    dir_path = lang["output"] + '/' + '/'.join(obj_path.split('/')[0:-1])
     if lang["namingConvention"] == "jvm":
         dir_path = dir_path.lower()
     utils.mkdir_ine(dir_path)
@@ -40,23 +43,22 @@ def main():
     validate_config(config)
     in_path = config["schemaDirectory"]
     in_path = in_path[:-1] if utils.ends_with(in_path, '/') else in_path
-
     root = in_path.split('/')[-1]
-    
-    out = ''
-    schemas = {}
 
-    for subdir, _, files in os.walk(in_path):
-        for file in files:
-            schema = read_schema(os.path.join(subdir, file))
-            schema_path = [file[:-5]]
-            obj_path = split_path(subdir, root) + schema_path # ['Common','Thing']
-            
-            for lang in config["languages"]:
-                dir_path = make_dir_path(lang, obj_path)
-                file_path = dir_path + '/' + schema_path[-1] + '.' + lang["extension"]
+    for lang in config["languages"]:
+        model_dict = {}
+        gen = get_generator(lang, config)
+        for subdir, _, files in os.walk(in_path):
+            for file in files:
+                schema = read_schema(os.path.join(subdir, file))
+                obj_path = split_path(subdir, root) + [file[:-5]] # ['Common','Thing']
+                model = gen.generate(schema, obj_path)
+                model_dict[model.ref] = model
 
-                with open(file_path, 'w+') as f:
-                    f.write(parse_schema(lang, schema, obj_path, config) + '\n')
+        for key,val in model_dict.items():
+            model = gen.inject_models(val, model_dict)
+            file_path = make_dir_path(lang, model.ref) + '/' + model.identifier + '.' + lang["extension"]
+            with open(file_path, 'w+') as f:
+                f.write(gen.make_code(model) + '\n')                    
 
 if __name__ == "__main__" : main()

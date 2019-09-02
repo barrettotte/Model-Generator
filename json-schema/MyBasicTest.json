@@ -10,7 +10,8 @@
             "items": {
                 "type": "number",
                 "uniqueItems": true,
-                "primitive": true
+                "primitive": true,
+                "maxItems": 10
             }
         },
         "myNumSet": {
@@ -42,7 +43,7 @@
             "items": {
                 "type": "array",
                 "items": {
-                    "type": "boolean",
+                    "$ref": "Common/Address.json",
                     "uniqueItems": true
                 }
             }

@@ -10,7 +10,7 @@ class gen_java8:
             self.annotation_config = lang_config["annotation"]
 
     def generate(self, schema, obj_path):
-        model = Model(obj_path[-1])
+        model = Model(obj_path[-1], '/'.join(obj_path)+'.json')
         model.namespace = self.bld_namespace(obj_path)
         model.inheritance = self.bld_inheritance(schema)
         model.imports = self.bld_imports(model.inheritance, obj_path)
@@ -24,30 +24,64 @@ class gen_java8:
         props,imports = self.bld_props(schema)
         model.properties = props
         if len(imports) > 0:
-            model.imports.append('')  # used to space out import statements
-            model.imports += imports  # import additional properties
+            model.imports.append('')
+            model.imports += imports
+        return model
 
-        print(str(model) + "\n")
-
-        return self.make_code(model)
+    def inject_models(self, model, models_dict):
+        targets = []
+        for prop in model.properties:
+            if ".json" in prop.kind: 
+                target = self.get_json_ref(prop.kind)
+                targets.append(target)
+                prop.kind = prop.kind.replace(target, target.split('/')[-1][:-5])
+        for imp in self.bld_imports(targets, model.ref):
+            model.imports.insert(0,imp[:-5])
+        return model
+    
+    def get_json_ref(self, s):
+        return s[s.rfind('<')+1:s.find('>')] if ('<' in s) else s
 
     def make_code(self, model):
         lines = ["package " + model.namespace + ";\n"]
         for imp in model.imports:
-            lines.append( ("import " + imp + ";") if (len(imp) > 0) else '')
-        lines.append('')
-        lines.append('\n'.join(model.annotations))
-        lines.append(self.bld_class_dec(model))
-        lines.append('')
+            lines.append(("import " + imp + ";") if (len(imp) > 0) else '')
+        lines.append('\n' + '\n'.join(model.annotations))
+        lines.append(self.bld_class_dec(model) + '\n')
+
         for p in model.properties:
             lines.append("    " + p.access + " " + p.kind + " " + p.identifier + ";")
-        lines.append('')
-
+        lines.append(self.bld_dft_ctor(model))
 
         for p in model.properties:
             lines.append(self.bld_prop_methods(p))
         lines.append("}")
         return '\n'.join(lines)
+
+    def bld_dft_ctor(self, model):
+        lines = []
+        lines.append("public " + model.identifier + "() {")
+        for p in model.properties:
+            init = self.init_prop(p)
+            if init: lines.append(init)
+        lines.append("}")
+        return "\n    " + "\n    ".join(lines)
+
+    def init_prop(self, prop):
+        exclude = ["String","Integer","int","Double","double","Boolean","boolean","Float","float"]
+        if "[]" in prop.kind:
+            if prop.max_items:
+                kind = prop.kind.replace("[]", "[" + str(prop.max_items) + "]")
+                return "    this." + prop.identifier + " = new " + kind + ";"
+
+            raise Exception("Cannot initialize primitive array '" + str(prop) + "' without 'maxItems' declared.")
+        if not prop.kind in exclude:
+            kind = prop.kind
+            if "List<" in kind: kind = kind.replace("List<","ArrayList<")
+            if "Map<"  in kind: kind = kind.replace("Map<","HashMap<")
+            if "Set<"  in kind: kind = kind.replace("Set<","HashSet<")
+            return "    this." + prop.identifier + " = new " + kind + "();"
+        return None
     
     def bld_prop_methods(self, prop):
         lines = []
@@ -87,10 +121,10 @@ class gen_java8:
                 extends.append(parent["$ref"][:-5]) # removes '.json'
         return extends
 
-    def bld_imports(self, inheritance, obj_path):
+    def bld_imports(self, items, obj_path):
         imports = []
-        for parent in inheritance:
-            split = parent.split('/')
+        for item in items:
+            split = item.split('/')
             rel_path = split[:-1]
             if obj_path != rel_path:
                 path = [s.lower() for s in rel_path] + [split[-1]]
@@ -101,11 +135,14 @@ class gen_java8:
         props,imports = ([],[])
         for key,val in schema["properties"].items():
             t = self.java_type(val)
-            props.append(Property(key, t, "private"))
             imp = self.java_import(t)
-            if imp and (not imp in imports): imports.append(imp)
+            p = Property(key, t, "private")
+            if "items" in val and "maxItems" in val["items"]:
+                p.max_items = val["items"]["maxItems"]
+            props.append(p)    
+            if imp: imports += [i for i in imp if not i in imports]
         return [props,imports]
-    
+        
     def bld_annotations(self):
         annotations, imports = ([],[])
         if self.annotation_config and self.annotation_config["type"] == "jackson2":
@@ -120,6 +157,8 @@ class gen_java8:
         return [annotations,imports]
 
     def java_type(self, val):
+        if "$ref" in val:
+            return val["$ref"]
         t = val["type"]
         if t == "array":
             return self.java_collection(val)
@@ -157,8 +196,8 @@ class gen_java8:
         if "set<"  in key: key = "set"
         if "map<"  in key: key = "map"
         imports = {
-            "list": "java.util.List",
-            "map":  "java.util.Map",
-            "set":  "java.util.Set"
+            "list": ["java.util.List", "java.util.ArrayList"],
+            "map":  ["java.util.Map" , "java.util.HashMap"],
+            "set":  ["java.util.Set" , "java.util.HashSet"]
         }
         return imports[key] if (key in imports) else None

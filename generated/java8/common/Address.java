@@ -15,6 +15,8 @@ public class Address extends Thing {
     private String state;
     private String zip;
 
+    public Address() {
+    }
 
     @JsonProperty("line1")
     public String getLine1() {

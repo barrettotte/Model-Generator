@@ -10,6 +10,8 @@ public class Thing {
 
     private String name;
 
+    public Thing() {
+    }
 
     @JsonProperty("name")
     public String getName() {

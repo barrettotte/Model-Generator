@@ -14,6 +14,9 @@ public class Book extends Thing {
     private String isbn;
     private Object author;
 
+    public Book() {
+        this.author = new Object();
+    }
 
     @JsonProperty("genre")
     public String getGenre() {

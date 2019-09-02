@@ -11,6 +11,8 @@ public class Person extends Thing {
 
     private Integer age;
 
+    public Person() {
+    }
 
     @JsonProperty("age")
     public Integer getAge() {

@@ -1,5 +1,6 @@
 package com.barrettotte.models;
 
+import com.barrettotte.models.common.Address;
 import com.barrettotte.models.common.Thing;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
+import java.util.ArrayList;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MyBasicTest extends Thing {
@@ -18,8 +21,14 @@ public class MyBasicTest extends Thing {
     private Integer myInt;
     private int myPrimInt;
     private boolean myPrimBool;
-    private List<Set<Boolean>> myNestedList;
+    private List<Set<Address>> myNestedList;
 
+    public MyBasicTest() {
+        this.myNumArray = new float[10];
+        this.myNumSet = new HashSet<Float>();
+        this.myStringList = new ArrayList<String>();
+        this.myNestedList = new ArrayList<HashSet<Address>>();
+    }
 
     @JsonProperty("myNumArray")
     public float[] getMyNumArray() {
@@ -76,11 +85,11 @@ public class MyBasicTest extends Thing {
     }
 
     @JsonProperty("myNestedList")
-    public List<Set<Boolean>> getMyNestedList() {
+    public List<Set<Address>> getMyNestedList() {
         return this.myNestedList;
     }
     @JsonProperty("myNestedList")
-    public void setMyNestedList(final List<Set<Boolean>> myNestedList) {
+    public void setMyNestedList(final List<Set<Address>> myNestedList) {
         this.myNestedList = myNestedList;
     }
 }

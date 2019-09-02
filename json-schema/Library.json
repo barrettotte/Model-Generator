@@ -8,8 +8,7 @@
         "books": {
             "type": "array",
             "items": {
-                "type": "string",
-                "uniqueItems": true
+                "$ref": "Book.json"
             }
         }
     }

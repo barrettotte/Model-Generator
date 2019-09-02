@@ -1,22 +1,25 @@
 
 class Model:
 
-    identifier = ''
-    namespace = ''
-    access = "public"
-    imports = []
-    annotations = []
-    properties = []
-    inheritance = []
-    interfaces = []
+    identifier = ''   # Class name
+    ref = ''          # json file reference, used for injection later in process
+    namespace = ''    # package -> com.barrettotte.models
+    access = "public" # might never change?
+    imports = []      # package imports
+    annotations = []  # class level annotations (jackson)
+    properties = []   # 
+    inheritance = []  # extends
+    interfaces = []   # might never be used
 
-    def __init__(self, identifier):
+    def __init__(self, identifier, ref):
         self.identifier = identifier
+        self.ref = ref
 
     def __str__(self):
         return "\n".join([
             "identifier:  " + self.identifier,
-            #"access:      " + self.access,
+            "ref       :  " + self.ref,
+            "access:      " + self.access,
             "namespace:   " + str(self.namespace),
             "inheritance: " + str(self.inheritance),
             "imports:     " + str(self.imports),
@@ -26,12 +29,11 @@ class Model:
 
 class Property:
     identifier = ""
-    kind = ""          
-    obj = None
+    kind = ""           # class type
     access = "private"  # [private,protected]
-    annotations = []    # String[]
-    getter = []         # String[]
-    setter = []         # String[]
+    annotations = []    # unused
+    required = False    # might be able to use for param ctor later?
+    max_items = None    # used for primitive arrays -> ...new String[10];
 
     def __init__(self, identifier, kind, access):
         self.identifier = identifier

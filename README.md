@@ -5,20 +5,21 @@ Generate code for basic models from JSON schema.
 
 
 ## Languages
-- [ ] Java
+- [ ] Java (in progress)
 - [ ] Groovy
 - [ ] Kotlin
 - [ ] TypeScript
 
 
 ## To Do
-* Protected properties?
-* folder structure for generated java classes
+* 'default' value for properties
+* BigDecimal
+* AdditionalTypes.json -> use DateTime, Double, etc by '$ref' with 'object'
 
 
-## Possible Enhancements
-* Java: Constructor generation
-* Java: toString, hashCode, equals
+## Possible Improvements
+* Parameterized constructor using 'required'
+* Calls to parameterized super constructor
 
 
 ## Specification

@@ -12,6 +12,8 @@ public class Cat extends Thing {
     private String breed;
     private String color;
 
+    public Cat() {
+    }
 
     @JsonProperty("breed")
     public String getBreed() {
