@@ -14,11 +14,10 @@ public class Building extends Thing {
 
     @JsonProperty("address")
     public Object getAddress() {
-        return address;
+        return this.address;
     }
     @JsonProperty("address")
     public void setAddress(final Object address) {
         this.address = address;
     }
 }
-

@@ -1,5 +1,7 @@
 package com.barrettotte.models.common;
 
+import com.barrettotte.models.common.Thing;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -12,11 +14,10 @@ public class Person extends Thing {
 
     @JsonProperty("age")
     public Integer getAge() {
-        return age;
+        return this.age;
     }
     @JsonProperty("age")
     public void setAge(final Integer age) {
         this.age = age;
     }
 }
-

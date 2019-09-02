@@ -1,5 +1,7 @@
 package com.barrettotte.models.common;
 
+import com.barrettotte.models.common.Thing;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -8,19 +10,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Address extends Thing {
 
     private String line1;
-
     private String line2;
-
     private String city;
-
     private String state;
-
     private String zip;
 
 
     @JsonProperty("line1")
     public String getLine1() {
-        return line1;
+        return this.line1;
     }
     @JsonProperty("line1")
     public void setLine1(final String line1) {
@@ -29,7 +27,7 @@ public class Address extends Thing {
 
     @JsonProperty("line2")
     public String getLine2() {
-        return line2;
+        return this.line2;
     }
     @JsonProperty("line2")
     public void setLine2(final String line2) {
@@ -38,7 +36,7 @@ public class Address extends Thing {
 
     @JsonProperty("city")
     public String getCity() {
-        return city;
+        return this.city;
     }
     @JsonProperty("city")
     public void setCity(final String city) {
@@ -47,7 +45,7 @@ public class Address extends Thing {
 
     @JsonProperty("state")
     public String getState() {
-        return state;
+        return this.state;
     }
     @JsonProperty("state")
     public void setState(final String state) {
@@ -56,11 +54,10 @@ public class Address extends Thing {
 
     @JsonProperty("zip")
     public String getZip() {
-        return zip;
+        return this.zip;
     }
     @JsonProperty("zip")
     public void setZip(final String zip) {
         this.zip = zip;
     }
 }
-

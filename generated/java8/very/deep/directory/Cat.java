@@ -10,13 +10,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Cat extends Thing {
 
     private String breed;
-
     private String color;
 
 
     @JsonProperty("breed")
     public String getBreed() {
-        return breed;
+        return this.breed;
     }
     @JsonProperty("breed")
     public void setBreed(final String breed) {
@@ -25,11 +24,10 @@ public class Cat extends Thing {
 
     @JsonProperty("color")
     public String getColor() {
-        return color;
+        return this.color;
     }
     @JsonProperty("color")
     public void setColor(final String color) {
         this.color = color;
     }
 }
-

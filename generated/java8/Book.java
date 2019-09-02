@@ -10,17 +10,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Book extends Thing {
 
     private String genre;
-
     private Float pageLength;
-
     private String isbn;
-
     private Object author;
 
 
     @JsonProperty("genre")
     public String getGenre() {
-        return genre;
+        return this.genre;
     }
     @JsonProperty("genre")
     public void setGenre(final String genre) {
@@ -29,7 +26,7 @@ public class Book extends Thing {
 
     @JsonProperty("pageLength")
     public Float getPageLength() {
-        return pageLength;
+        return this.pageLength;
     }
     @JsonProperty("pageLength")
     public void setPageLength(final Float pageLength) {
@@ -38,7 +35,7 @@ public class Book extends Thing {
 
     @JsonProperty("isbn")
     public String getIsbn() {
-        return isbn;
+        return this.isbn;
     }
     @JsonProperty("isbn")
     public void setIsbn(final String isbn) {
@@ -47,11 +44,10 @@ public class Book extends Thing {
 
     @JsonProperty("author")
     public Object getAuthor() {
-        return author;
+        return this.author;
     }
     @JsonProperty("author")
     public void setAuthor(final Object author) {
         this.author = author;
     }
 }
-
