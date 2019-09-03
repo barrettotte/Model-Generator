@@ -220,6 +220,7 @@ class gen_java8:
         if "list<" in key: key = "list"
         if "set<"  in key: key = "set"
         if "map<"  in key: key = "map"
+            
         #TODO: Move to constants
         imports = {
             "list":          ["java.util.List", "java.util.ArrayList"],

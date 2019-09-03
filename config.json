@@ -26,6 +26,19 @@
           "NON_NULL"
         ]
       }
+    },
+    {
+      "name": "kotlin",
+      "namingConvention": "jvm",
+      "namespace": "com.barrettotte.models",
+      "extension": "kt",
+      "output": "generated/kotlin",
+      "annotation": {
+        "type": "jackson2",
+        "includes": [
+          "NON_NULL"
+        ]
+      }
     }
   ]
 }

@@ -3,10 +3,13 @@ import utils as utils
 
 from generators.gen_groovy import gen_groovy
 from generators.gen_java8  import gen_java8
+from generators.gen_kotlin import gen_kotlin
 
 
 def get_config(path):
-    return utils.read_file_json(path)
+    config = utils.read_file_json(path)
+    config["schemaDirectory"] = config["schemaDirectory"].replace('/',os.sep).replace('\\',os.sep)
+    return config
 
 def validate_config(config):
     pfx = 'Config Validation Error: '
@@ -25,31 +28,32 @@ def get_generator(lang, config):
     return {
         'groovy': gen_groovy(config, lang),
         'java8':  gen_java8(config, lang),
+        'kotlin': gen_kotlin(config, lang)
     }[lang['name']]
 
 def split_path(subdir, root):
-    split = subdir.split("/")
+    split = subdir.split(os.sep)
     rel_path = split[split.index(root):]
     return [] if len(rel_path) == 1 else rel_path[1:]
 
 def make_dir_path(lang, obj_path):
     utils.mkdir_ine(lang["output"])
-    dir_path = lang["output"] + '/'
+    dir_path = lang["output"] + os.sep
     if lang["namingConvention"] == "jvm":
-        ns = lang["namespace"].replace('.','/').lower() + '/'
-        utils.mkdir_ine(lang["output"] + '/' + ns)
+        ns = lang["namespace"].replace('.',os.sep).lower() + os.sep
+        utils.mkdir_ine(lang["output"] + os.sep + ns)
         dir_path = dir_path.lower() + ns
-    dir_path += '/'.join(obj_path.split('/')[0:-1])
+    dir_path += os.sep.join(obj_path.split(os.sep)[0:-1])
     utils.mkdir_ine(dir_path)
     return dir_path
 
 
 def main():
-    config = get_config("./config.json")
+    config = get_config("." + os.sep + "config.json")
     validate_config(config)
     in_path = config["schemaDirectory"]
-    in_path = in_path[:-1] if utils.ends_with(in_path, '/') else in_path
-    root = in_path.split('/')[-1]
+    in_path = in_path[:-1] if utils.ends_with(in_path, os.sep) else in_path
+    root = in_path.split(os.sep)[-1]
 
     for lang in config["languages"]:
         model_dict = {}
@@ -61,9 +65,9 @@ def main():
                 model = gen.generate(schema, obj_path)
                 model_dict[model.ref] = model
 
-        for key,val in model_dict.items():
+        for _,val in model_dict.items():
             model = gen.inject_models(val, model_dict)
-            file_path = make_dir_path(lang, model.ref) + '/' + model.identifier + '.' + lang["extension"]
+            file_path = make_dir_path(lang, model.ref) + os.sep + model.identifier + '.' + lang["extension"]
             with open(file_path, 'w+') as f:
                 f.write(gen.make_code(model) + '\n')                    
 
