@@ -1,1 +1,11 @@
 __pycache__
+
+generated/java8/.gradle/
+generated/java8/build/
+generated/java8/build.gradle
+
+generated/groovy/.gradle/
+generated/groovy/build/
+generated/groovy/build.gradle
+
+tests/.gradle/

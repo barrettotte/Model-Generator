@@ -14,6 +14,7 @@ Generate code for basic models from JSON schema.
 
 ## To Do
 * unit tests for java and groovy before moving on
+* generate build files in directories
 
 
 ## Possible Improvements
