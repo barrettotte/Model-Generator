@@ -9,3 +9,8 @@ generated/groovy/build/
 generated/groovy/build.gradle
 
 tests/.gradle/
+
+build-files/.project
+build-files/.settings/
+build-files/.gradle/
+

@@ -15,7 +15,7 @@ class Book extends Thing {
     String[] genres = new String[10]
 
     @JsonProperty("pageLength")
-    long pageLength = 25
+    long pageLength = 25L
 
     @JsonProperty("isbn")
     String isbn
@@ -24,6 +24,6 @@ class Book extends Thing {
     Person author = new Person()
 
     @JsonProperty("price")
-    BigDecimal price = new BigDecimal()
+    BigDecimal price = new BigDecimal(0)
 
 }

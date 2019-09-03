@@ -10,6 +10,7 @@ class gen_java8:
         if "annotation" in lang_config.keys():
             self.annotation_config = lang_config["annotation"]
 
+    # Parse schema and build model
     def generate(self, schema, obj_path):
         model = Model(obj_path[-1], '/'.join(obj_path)+'.json')
         model.namespace = self.bld_namespace(obj_path)
@@ -29,6 +30,7 @@ class gen_java8:
             model.imports += imports
         return model
 
+    # Replace file references with classes and inject additional imports
     def inject_models(self, model, models_dict):
         targets = []
         for prop in model.properties:
@@ -43,6 +45,7 @@ class gen_java8:
     def get_json_ref(self, s):
         return s[s.rfind('<')+1:s.find('>')] if ('<' in s) else s
 
+    # Generate source code from model
     def make_code(self, model):
         lines = ["package " + model.namespace + ";\n"]
         for imp in model.imports:
@@ -59,6 +62,7 @@ class gen_java8:
         lines.append("}")
         return '\n'.join(lines)
 
+    # Build default constructor
     def bld_dft_ctor(self, model):
         lines = []
         lines.append("public " + model.identifier + "() {")
@@ -68,10 +72,37 @@ class gen_java8:
         lines.append("}")
         return "\n    " + "\n    ".join(lines)
 
+    # Get suffix for literal value if needed
+    def get_suffix(self, kind):
+        k = kind.lower()
+        if k == "long":     return "L"
+        if k == "double":   return "D"
+        if k == "float":    return "F"
+        return ''
+
+    # Set default value for property
+    def prop_dft(self, prop):
+        dft = ''
+        if prop.kind == "String": return "\"" + prop.default + "\""
+        return str(prop.default)
+    
+    # Default params for new obj -> ex: this.bd = new BigDecimal(0)
+    def obj_dft(self, kind):
+        if kind == "BigDecimal": return "(0)"
+        return "()"
+
+    # Implement collection interfaces
+    def collection_impl(self, kind):
+        impl = ''
+        if "List<" in kind:  kind = kind.replace("List<","ArrayList<")
+        if "Map<"  in kind:  kind = kind.replace("Map<","HashMap<")
+        if "Set<"  in kind:  kind = kind.replace("Set<","HashSet<")
+        return impl
+
+    # Build property initialize statement -> ex: this.arr = new String[10];
     def init_prop(self, prop):
         if prop.default:
-            dft = str(prop.default) if prop.kind != "String" else str("\""+prop.default+"\"")
-            return prop.identifier + " = " + dft
+            return prop.identifier + " = " + self.prop_dft(prop) + self.get_suffix(prop.kind)
         if "[]" in prop.kind:
             if prop.max_items:
                 kind = prop.kind.replace("[]", "[" + str(prop.max_items) + "]")
@@ -79,16 +110,15 @@ class gen_java8:
             raise Exception("Cannot initialize primitive array '" + str(prop) + "' without 'maxItems' declared.")
         exclude = ["String","Integer","int","Double","double","Boolean","boolean","Float","float"]
         if not prop.kind in exclude:
-            kind = prop.kind
-            if "List<" in kind: kind = kind.replace("List<","ArrayList<")
-            if "Map<"  in kind: kind = kind.replace("Map<","HashMap<")
-            if "Set<"  in kind: kind = kind.replace("Set<","HashSet<")
-            return prop.identifier + " = new " + kind + "()"
+            kind = self.collection_impl(prop.kind)
+            return prop.identifier + " = new " + kind + self.obj_dft(kind)
         return None
 
+    # Build annotations needed for a property
     def prop_annotation(self, identifier):
         return "@JsonProperty(\"" + identifier + "\")" if self.annotation_config else None
     
+    # Build getter and setter for a property
     def bld_prop_methods(self, prop):
         lines = []
         annote = self.prop_annotation(prop.identifier)
@@ -104,6 +134,7 @@ class gen_java8:
         lines.append("}")
         return "\n    " + "\n    ".join(lines)
 
+    # Build class declaration -> ex: "public class Cat extends Animal {"
     def bld_class_dec(self, model):
         dec = model.access + " class " + model.identifier
         if len(model.inheritance) > 0:
@@ -114,19 +145,22 @@ class gen_java8:
             dec += parents[2:]
         return dec + " {"
     
+    # Build package reference -> ex: "com.barrettotte.models"
     def bld_namespace(self, obj_path):
         rel_pkg = '.'.join([op.lower() for op in obj_path[:-1]])
         rel_pkg = '.' + rel_pkg if (len(rel_pkg) > 0) else rel_pkg
         return self.project_pkg + rel_pkg
 
+    # Build extends statement
     def bld_inheritance(self, schema):
-        extends = [] # TODO add multiple inheritance
+        extends = []
         if "extends" in schema:
             parent = schema["extends"]
             if "$ref" in parent:
-                extends.append(parent["$ref"][:-5]) # removes '.json'
+                extends.append(parent["$ref"][:-5])
         return extends
 
+    # Build list of import statements -> ex: "com.barrettotte.models.common.Person"
     def bld_imports(self, items, obj_path):
         imports = []
         for item in items:
@@ -137,22 +171,24 @@ class gen_java8:
                 imports.append(self.project_pkg + '.' + '.'.join(path).replace('/','.'))
         return imports
 
+    # Build list of properties and list of necessary imports
     def bld_props(self, schema):
         props,imports = ([],[])
         for key,val in schema["properties"].items():
-            t = self.java_type(val)
-            imp = self.java_import(t)
+            t = self.get_type(val)
+            imp = self.get_obj_import(t)
             p = Property(key, t, "private")
             if "items" in val and "maxItems" in val["items"]:
                 p.max_items = val["items"]["maxItems"]
             if "default" in val:
                 p.default = val["default"]
             if "parseTo" in val:
-                self.java_import(p.kind)
+                self.get_obj_import(p.kind)
             props.append(p)
             if imp: imports += [i for i in imp if not i in imports]
         return [props,imports]
-        
+
+    # Build class level annotations and list of imports needed for them  
     def bld_annotations(self):
         annotations, imports = ([],[])
         if self.annotation_config and self.annotation_config["type"] == "jackson2":
@@ -165,6 +201,7 @@ class gen_java8:
                     annotations.append("@JsonInclude(JsonInclude.Include." + inc + ")")
         return [annotations,imports]
 
+    # Attempt to parse property to non-standard JSON schema type
     def attempt_parse(self, val):
         p = val["parseTo"].lower()
         if val["type"] == "number" and p == "decimal":                return "BigDecimal"
@@ -175,19 +212,19 @@ class gen_java8:
             SyntaxWarning, stacklevel=10
         )
         return None
-        
-    def java_type(self, val):
+    
+    # Convert JSON schema type or ref to Java type
+    def get_type(self, val):
         if "$ref" in val:
             return val["$ref"]
         if "parseTo" in val:
             attempt = self.attempt_parse(val)
             if attempt: return attempt
-    
         t = val["type"]
         if t == "array":
-            return self.java_collection(val)
+            return self.get_collection(val)
         if "primitive" in val and val["primitive"]:
-            return self.java_primitive(val)
+            return self.get_primitive(val)
         if t == "string":  return "String"
         if t == "number":  return "Float"
         if t == "integer": return "Integer"
@@ -195,11 +232,12 @@ class gen_java8:
         if t == "object":  return "Object"
         raise Exception("Invalid type '" + t + "'")
 
-    def java_collection(self, val):
+    # Convert JSON schema collection to java collection
+    def get_collection(self, val):
         collection = ''
         if "items" in val:
             items = val["items"]
-            t = self.java_type(items)
+            t = self.get_type(items)
             if "primitive" in val and val["primitive"]:
                 return t + "[]"
             if "uniqueItems" in items and items["uniqueItems"]:
@@ -207,7 +245,8 @@ class gen_java8:
             return "List<" + t + ">"
         raise Exception("Could not generate array")
     
-    def java_primitive(self, val):
+    # Convert JSON schema primitive to java primitive
+    def get_primitive(self, val):
         t = val["type"]
         if t == "integer": return "int"
         if t == "number":  return "float"
@@ -215,7 +254,8 @@ class gen_java8:
         if t == "string":  return "String"
         raise Exception("Cannot produce primitive for type '" + t + "'")
 
-    def java_import(self, val):
+    # Return import statement for java object
+    def get_obj_import(self, val):
         key = val.lower()
         if "list<" in key: key = "list"
         if "set<"  in key: key = "set"
