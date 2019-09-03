@@ -18,7 +18,7 @@ class gen_groovy(gen_java8):
             lines.append("    " + self.prop_annotation(prop.identifier))
             p = "    " + prop.kind + " "
             init = self.init_prop(prop)
-            p += init if init else prop.identifier
+            p += init if init != '' else prop.identifier
             lines.append(p + "\n")
         lines.append("}")
         return '\n'.join(lines)

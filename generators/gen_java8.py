@@ -68,7 +68,7 @@ class gen_java8:
         lines.append("public " + model.identifier + "() {")
         for p in model.properties:
             init = self.init_prop(p)
-            if init: lines.append("    this." + init + ";")
+            if len(init) > 0: lines.append("    this." + init + ";")
         lines.append("}")
         return "\n    " + "\n    ".join(lines)
 
@@ -82,9 +82,10 @@ class gen_java8:
 
     # Set default value for property
     def prop_dft(self, prop):
-        dft = ''
-        if prop.kind == "String": return "\"" + prop.default + "\""
-        return str(prop.default)
+        dft = str(prop.default)
+        if prop.kind == "String": 
+            dft = "\"" + prop.default + "\""
+        return prop.identifier + " = " + dft + self.get_suffix(prop.kind)
     
     # Default params for new obj -> ex: this.bd = new BigDecimal(0)
     def obj_dft(self, kind):
@@ -102,7 +103,7 @@ class gen_java8:
     # Build property initialize statement -> ex: this.arr = new String[10];
     def init_prop(self, prop):
         if prop.default:
-            return prop.identifier + " = " + self.prop_dft(prop) + self.get_suffix(prop.kind)
+            return self.prop_dft(prop)
         if "[]" in prop.kind:
             if prop.max_items:
                 kind = prop.kind.replace("[]", "[" + str(prop.max_items) + "]")
@@ -112,7 +113,7 @@ class gen_java8:
         if not prop.kind in exclude:
             kind = self.collection_impl(prop.kind)
             return prop.identifier + " = new " + kind + self.obj_dft(kind)
-        return None
+        return ''
 
     # Build annotations needed for a property
     def prop_annotation(self, identifier):
