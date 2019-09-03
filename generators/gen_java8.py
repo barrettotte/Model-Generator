@@ -93,10 +93,10 @@ class gen_java8:
 
     # Implement collection interfaces
     def collection_impl(self, kind):
-        impl = ''
-        if "List<" in kind:  kind = kind.replace("List<","ArrayList<")
-        if "Map<"  in kind:  kind = kind.replace("Map<","HashMap<")
-        if "Set<"  in kind:  kind = kind.replace("Set<","HashSet<")
+        impl = kind
+        if "List<" in kind:  impl = impl.replace("List<","ArrayList<")
+        if "Map<"  in kind:  impl = impl.replace("Map<","HashMap<")
+        if "Set<"  in kind:  impl = impl.replace("Set<","HashSet<")
         return impl
 
     # Build property initialize statement -> ex: this.arr = new String[10];
@@ -260,12 +260,10 @@ class gen_java8:
         if "list<" in key: key = "list"
         if "set<"  in key: key = "set"
         if "map<"  in key: key = "map"
-            
-        #TODO: Move to constants
         imports = {
-            "list":          ["java.util.List", "java.util.ArrayList"],
-            "map":           ["java.util.Map" , "java.util.HashMap"],
-            "set":           ["java.util.Set" , "java.util.HashSet"],
-            "bigdecimal":    ["java.math.BigDecimal"]
+            "list":       ["java.util.List", "java.util.ArrayList"],
+            "map":        ["java.util.Map" , "java.util.HashMap"],
+            "set":        ["java.util.Set" , "java.util.HashSet"],
+            "bigdecimal": ["java.math.BigDecimal"]
         }
         return imports[key] if (key in imports) else None
