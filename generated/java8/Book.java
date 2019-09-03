@@ -5,37 +5,40 @@ import com.barrettotte.models.common.Thing;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.math.BigDecimal;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Book extends Thing {
 
-    private String genre;
-    private Float pageLength;
+    private String[] genres;
+    private long pageLength;
     private String isbn;
     private Person author;
-    private Float price;
+    private BigDecimal price;
 
     public Book() {
+        this.genres = new String[10];
         this.pageLength = 25;
         this.author = new Person();
+        this.price = new BigDecimal();
     }
 
-    @JsonProperty("genre")
-    public String getGenre() {
-        return this.genre;
+    @JsonProperty("genres")
+    public String[] getGenres() {
+        return this.genres;
     }
-    @JsonProperty("genre")
-    public void setGenre(final String genre) {
-        this.genre = genre;
+    @JsonProperty("genres")
+    public void setGenres(final String[] genres) {
+        this.genres = genres;
     }
 
     @JsonProperty("pageLength")
-    public Float getPageLength() {
+    public long getPageLength() {
         return this.pageLength;
     }
     @JsonProperty("pageLength")
-    public void setPageLength(final Float pageLength) {
+    public void setPageLength(final long pageLength) {
         this.pageLength = pageLength;
     }
 
@@ -58,11 +61,11 @@ public class Book extends Thing {
     }
 
     @JsonProperty("price")
-    public Float getPrice() {
+    public BigDecimal getPrice() {
         return this.price;
     }
     @JsonProperty("price")
-    public void setPrice(final Float price) {
+    public void setPrice(final BigDecimal price) {
         this.price = price;
     }
 }

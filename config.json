@@ -3,6 +3,18 @@
   "schemaDirectory": "./json-schema/",
   "languages": [
     {
+      "name": "groovy",
+      "namingConvention": "jvm",
+      "extension": "groovy",
+      "output": "generated/groovy",
+      "annotation": {
+        "type": "jackson2",
+        "includes": [
+          "NON_NULL"
+        ]
+      }
+    },
+    {
       "name": "java8",
       "namingConvention": "jvm",
       "extension": "java",

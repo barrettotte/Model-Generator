@@ -8,11 +8,17 @@
     "$ref": "Common/Thing.json"
   },
   "properties": {
-    "genre": {
-      "type": "string"
+    "genres": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxItems": 10
+      },
+      "primitive": true
     },
     "pageLength": {
-      "type": "number",
+      "type": "integer",
+      "parseTo": "long",
       "default": 25
     },
     "isbn": {
@@ -22,7 +28,8 @@
       "$ref": "Common/Person.json"
     },
     "price": {
-      "type": "number"
+      "type": "number",
+      "parseTo": "decimal"
     }
   }
 }

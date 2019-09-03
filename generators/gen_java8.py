@@ -1,3 +1,4 @@
+import warnings
 import utils as utils
 from .model import Model,Property
 
@@ -63,18 +64,18 @@ class gen_java8:
         lines.append("public " + model.identifier + "() {")
         for p in model.properties:
             init = self.init_prop(p)
-            if init: lines.append(init)
+            if init: lines.append("    this." + init + ";")
         lines.append("}")
         return "\n    " + "\n    ".join(lines)
 
     def init_prop(self, prop):
         if prop.default:
             dft = str(prop.default) if prop.kind != "String" else str("\""+prop.default+"\"")
-            return "    this." + prop.identifier + " = " + dft + ";"
+            return prop.identifier + " = " + dft
         if "[]" in prop.kind:
             if prop.max_items:
                 kind = prop.kind.replace("[]", "[" + str(prop.max_items) + "]")
-                return "    this." + prop.identifier + " = new " + kind + ";"
+                return prop.identifier + " = new " + kind
             raise Exception("Cannot initialize primitive array '" + str(prop) + "' without 'maxItems' declared.")
         exclude = ["String","Integer","int","Double","double","Boolean","boolean","Float","float"]
         if not prop.kind in exclude:
@@ -82,17 +83,20 @@ class gen_java8:
             if "List<" in kind: kind = kind.replace("List<","ArrayList<")
             if "Map<"  in kind: kind = kind.replace("Map<","HashMap<")
             if "Set<"  in kind: kind = kind.replace("Set<","HashSet<")
-            return "    this." + prop.identifier + " = new " + kind + "();"
+            return prop.identifier + " = new " + kind + "()"
         return None
+
+    def prop_annotation(self, identifier):
+        return "@JsonProperty(\"" + identifier + "\")" if self.annotation_config else None
     
     def bld_prop_methods(self, prop):
         lines = []
-        ant = "@JsonProperty(\"" + prop.identifier + "\")" if self.annotation_config else None
-        if ant: lines.append(ant)
+        annote = self.prop_annotation(prop.identifier)
+        if annote: lines.append(annote)
         lines.append("public " + prop.kind + " get" + utils.cap_first(prop.identifier) + "() {")
         lines.append("    return this." + prop.identifier + ";")
         lines.append("}")
-        if ant: lines.append(ant)
+        if annote: lines.append(annote)
         setter = "public void set" + utils.cap_first(prop.identifier)
         setter += "(final " + prop.kind + ' ' + prop.identifier + ") {"
         lines.append(setter)
@@ -143,6 +147,8 @@ class gen_java8:
                 p.max_items = val["items"]["maxItems"]
             if "default" in val:
                 p.default = val["default"]
+            if "parseTo" in val:
+                self.java_import(p.kind)
             props.append(p)
             if imp: imports += [i for i in imp if not i in imports]
         return [props,imports]
@@ -152,17 +158,31 @@ class gen_java8:
         if self.annotation_config and self.annotation_config["type"] == "jackson2":
             imports = [
               "com.fasterxml.jackson.annotation.JsonInclude",
-              "com.fasterxml.jackson.annotation.JsonProperty",
-              "com.fasterxml.jackson.annotation.JsonPropertyOrder"
+              "com.fasterxml.jackson.annotation.JsonProperty"
             ]
             if "includes" in self.annotation_config.keys():
                 for inc in self.annotation_config["includes"]:
                     annotations.append("@JsonInclude(JsonInclude.Include." + inc + ")")
         return [annotations,imports]
 
+    def attempt_parse(self, val):
+        p = val["parseTo"].lower()
+        if val["type"] == "number" and p == "decimal":                return "BigDecimal"
+        if val["type"] == "number" and p in ["double","float"]:       return val["parseTo"]
+        if val["type"] == "integer" and p in ["byte","short","long"]: return val["parseTo"]
+        if val["type"] == "string" and p in ["char","character"]:     return val["parseTo"]
+        warnings.warn("Could not parse '" + val["type"] + "' to '" + val["parseTo"] + "'", 
+            SyntaxWarning, stacklevel=10
+        )
+        return None
+        
     def java_type(self, val):
         if "$ref" in val:
             return val["$ref"]
+        if "parseTo" in val:
+            attempt = self.attempt_parse(val)
+            if attempt: return attempt
+    
         t = val["type"]
         if t == "array":
             return self.java_collection(val)
@@ -180,7 +200,7 @@ class gen_java8:
         if "items" in val:
             items = val["items"]
             t = self.java_type(items)
-            if "primitive" in items and items["primitive"]:
+            if "primitive" in val and val["primitive"]:
                 return t + "[]"
             if "uniqueItems" in items and items["uniqueItems"]:
                 return "Set<" + t + ">"
@@ -192,6 +212,7 @@ class gen_java8:
         if t == "integer": return "int"
         if t == "number":  return "float"
         if t == "boolean": return "boolean"
+        if t == "string":  return "String"
         raise Exception("Cannot produce primitive for type '" + t + "'")
 
     def java_import(self, val):
@@ -199,9 +220,11 @@ class gen_java8:
         if "list<" in key: key = "list"
         if "set<"  in key: key = "set"
         if "map<"  in key: key = "map"
+        #TODO: Move to constants
         imports = {
-            "list": ["java.util.List", "java.util.ArrayList"],
-            "map":  ["java.util.Map" , "java.util.HashMap"],
-            "set":  ["java.util.Set" , "java.util.HashSet"]
+            "list":          ["java.util.List", "java.util.ArrayList"],
+            "map":           ["java.util.Map" , "java.util.HashMap"],
+            "set":           ["java.util.Set" , "java.util.HashSet"],
+            "bigdecimal":    ["java.math.BigDecimal"]
         }
         return imports[key] if (key in imports) else None

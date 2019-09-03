@@ -5,16 +5,15 @@ Generate code for basic models from JSON schema.
 
 
 ## Languages
-- [ ] Java (in progress)
-- [ ] Groovy
+- [x] Java 
+- [x] Groovy
 - [ ] Kotlin
 - [ ] TypeScript
+- [ ] T-SQL
 
 
 ## To Do
-* 'default' value for simple properties
-* BigDecimal support
-* long, double
+* unit tests for java and groovy before moving on
 
 
 ## Possible Improvements
@@ -27,21 +26,49 @@ Generate code for basic models from JSON schema.
 
 
 ## Specification
+A couple of new properties were added to add more functionality.
+
+* ```extends``` - extend from other object in another schema
+* ```primitive``` - array: T[] or List<T> ; numbers: Float or float; Integer or int
+* ```parseTo``` - attempt a parse to non-standard JSON schema types (BigDecimal, Long, Byte, etc)
+  * If parsing fails on a field, it falls back to whatever is specified in ```type```
+
+
 ```JSON
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Test schema",
-    "description": "A test schema to show various things",
-    "type": "object",
-    "extends": {
-        "$ref": "Common/Thing.json"
+  "id": "http://json-schema.org/thing",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Book",
+  "description": "A book",
+  "type": "object",
+  "extends": {
+    "$ref": "Common/Thing.json" // relative to schema directory
+  },
+  "properties": {
+    "genres": {
+      "type": "array",
+      "items": {
+        "type": "string", // String.class
+        "maxItems": 10,   // String[10] init in constructor
+        "primitive": true // true= T[], false/null= List<T>
+      }
     },
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        
+    "pageLength": {
+      "type": "integer",  // Integer.class
+      "parseTo": "Long",  // attempt parse to Long.class
+      "default": 25       // default value to 25 in constructor
+    },
+    "isbn": {
+      "type": "string"
+    },
+    "author": {
+      "$ref": "Common/Person.json" // Person.class relative to schema directory
+    },
+    "price": {
+      "type": "number",    // Float.class
+      "parseTo": "decimal" // attempt parse to BigDecimal for currency handling, falls back to Float if failed
     }
+  }
 }
 ```
 

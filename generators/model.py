@@ -34,7 +34,8 @@ class Property:
     annotations = []    # unused
     required = False    # might be able to use for param ctor later?
     max_items = None    # used for primitive arrays -> ...new String[10]
-    default = None
+    default = None      #
+    parse_to = None     # attempt to parse property to this class...not guaranteed results
 
     def __init__(self, identifier, kind, access):
         self.identifier = identifier

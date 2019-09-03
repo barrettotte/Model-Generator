@@ -15,9 +15,11 @@
         },
         "myNumArray2": {
             "type": "array",
+            "primitive": true,
             "items": {
                 "type": "number",
-                "maxItems": 10
+                "maxItems": 10,
+                "primitive": true
             }
         },
         "myNumSet": {

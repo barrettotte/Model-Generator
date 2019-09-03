@@ -1,7 +1,9 @@
 import os
 import utils as utils
 
-from generators.gen_java8 import gen_java8
+from generators.gen_groovy import gen_groovy
+from generators.gen_java8  import gen_java8
+
 
 def get_config(path):
     return utils.read_file_json(path)
@@ -21,7 +23,8 @@ def parse_schema(generator, schema, obj_path):
 
 def get_generator(lang, config):
     return {
-        'java8': gen_java8(config, lang)
+        'groovy': gen_groovy(config, lang),
+        'java8':  gen_java8(config, lang),
     }[lang['name']]
 
 def split_path(subdir, root):

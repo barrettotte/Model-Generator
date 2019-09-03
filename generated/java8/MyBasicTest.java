@@ -5,7 +5,6 @@ import com.barrettotte.models.common.Thing;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -15,8 +14,8 @@ import java.util.HashSet;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MyBasicTest extends Thing {
 
-    private float[] myNumArray;
-    private List<Float> myNumArray2;
+    private List<float> myNumArray;
+    private float[] myNumArray2;
     private Set<Float> myNumSet;
     private List<String> myStringList;
     private Integer myInt;
@@ -25,28 +24,28 @@ public class MyBasicTest extends Thing {
     private List<Set<Address>> myNestedList;
 
     public MyBasicTest() {
-        this.myNumArray = new float[10];
-        this.myNumArray2 = new ArrayList<Float>();
+        this.myNumArray = new ArrayList<float>();
+        this.myNumArray2 = new float[10];
         this.myNumSet = new HashSet<Float>();
         this.myStringList = new ArrayList<String>();
         this.myNestedList = new ArrayList<HashSet<Address>>();
     }
 
     @JsonProperty("myNumArray")
-    public float[] getMyNumArray() {
+    public List<float> getMyNumArray() {
         return this.myNumArray;
     }
     @JsonProperty("myNumArray")
-    public void setMyNumArray(final float[] myNumArray) {
+    public void setMyNumArray(final List<float> myNumArray) {
         this.myNumArray = myNumArray;
     }
 
     @JsonProperty("myNumArray2")
-    public List<Float> getMyNumArray2() {
+    public float[] getMyNumArray2() {
         return this.myNumArray2;
     }
     @JsonProperty("myNumArray2")
-    public void setMyNumArray2(final List<Float> myNumArray2) {
+    public void setMyNumArray2(final float[] myNumArray2) {
         this.myNumArray2 = myNumArray2;
     }
 
