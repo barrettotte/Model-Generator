@@ -1,5 +1,6 @@
 package com.barrettotte.models;
 
+import com.barrettotte.models.common.Person;
 import com.barrettotte.models.common.Thing;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,10 +13,12 @@ public class Book extends Thing {
     private String genre;
     private Float pageLength;
     private String isbn;
-    private Object author;
+    private Person author;
+    private Float price;
 
     public Book() {
-        this.author = new Object();
+        this.pageLength = 25;
+        this.author = new Person();
     }
 
     @JsonProperty("genre")
@@ -46,11 +49,20 @@ public class Book extends Thing {
     }
 
     @JsonProperty("author")
-    public Object getAuthor() {
+    public Person getAuthor() {
         return this.author;
     }
     @JsonProperty("author")
-    public void setAuthor(final Object author) {
+    public void setAuthor(final Person author) {
         this.author = author;
+    }
+
+    @JsonProperty("price")
+    public Float getPrice() {
+        return this.price;
+    }
+    @JsonProperty("price")
+    public void setPrice(final Float price) {
+        this.price = price;
     }
 }

@@ -68,13 +68,15 @@ class gen_java8:
         return "\n    " + "\n    ".join(lines)
 
     def init_prop(self, prop):
-        exclude = ["String","Integer","int","Double","double","Boolean","boolean","Float","float"]
+        if prop.default:
+            dft = str(prop.default) if prop.kind != "String" else str("\""+prop.default+"\"")
+            return "    this." + prop.identifier + " = " + dft + ";"
         if "[]" in prop.kind:
             if prop.max_items:
                 kind = prop.kind.replace("[]", "[" + str(prop.max_items) + "]")
                 return "    this." + prop.identifier + " = new " + kind + ";"
-
             raise Exception("Cannot initialize primitive array '" + str(prop) + "' without 'maxItems' declared.")
+        exclude = ["String","Integer","int","Double","double","Boolean","boolean","Float","float"]
         if not prop.kind in exclude:
             kind = prop.kind
             if "List<" in kind: kind = kind.replace("List<","ArrayList<")
@@ -139,7 +141,9 @@ class gen_java8:
             p = Property(key, t, "private")
             if "items" in val and "maxItems" in val["items"]:
                 p.max_items = val["items"]["maxItems"]
-            props.append(p)    
+            if "default" in val:
+                p.default = val["default"]
+            props.append(p)
             if imp: imports += [i for i in imp if not i in imports]
         return [props,imports]
         

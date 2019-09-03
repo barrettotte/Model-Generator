@@ -13,6 +13,7 @@ public class Cat extends Thing {
     private String color;
 
     public Cat() {
+        this.color = "orange";
     }
 
     @JsonProperty("breed")

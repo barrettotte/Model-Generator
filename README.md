@@ -12,14 +12,18 @@ Generate code for basic models from JSON schema.
 
 
 ## To Do
-* 'default' value for properties
-* BigDecimal
-* AdditionalTypes.json -> use DateTime, Double, etc by '$ref' with 'object'
+* 'default' value for simple properties
+* BigDecimal support
+* long, double
 
 
 ## Possible Improvements
-* Parameterized constructor using 'required'
-* Calls to parameterized super constructor
+* Constants / final properties ?
+* Serialization
+* Builder methods
+* hashCode, toString, and equals methods
+* Parameterized constructor using 'required' on object properties
+* On a similar note, call parameterized super constructor
 
 
 ## Specification

@@ -12,7 +12,8 @@
             "type": "string"
         },
         "color": {
-            "type": "string"
+            "type": "string",
+            "default": "orange"
         }
     }
 }

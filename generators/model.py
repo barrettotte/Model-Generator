@@ -33,7 +33,8 @@ class Property:
     access = "private"  # [private,protected]
     annotations = []    # unused
     required = False    # might be able to use for param ctor later?
-    max_items = None    # used for primitive arrays -> ...new String[10];
+    max_items = None    # used for primitive arrays -> ...new String[10]
+    default = None
 
     def __init__(self, identifier, kind, access):
         self.identifier = identifier

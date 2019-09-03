@@ -9,8 +9,14 @@
             "type": "array",
             "items": {
                 "type": "number",
-                "uniqueItems": true,
                 "primitive": true,
+                "maxItems": 10
+            }
+        },
+        "myNumArray2": {
+            "type": "array",
+            "items": {
+                "type": "number",
                 "maxItems": 10
             }
         },

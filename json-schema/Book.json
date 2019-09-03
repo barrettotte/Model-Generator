@@ -12,13 +12,17 @@
       "type": "string"
     },
     "pageLength": {
-      "type": "number"
+      "type": "number",
+      "default": 25
     },
     "isbn": {
       "type": "string"
     },
     "author": {
-      "type": "object"
+      "$ref": "Common/Person.json"
+    },
+    "price": {
+      "type": "number"
     }
   }
 }

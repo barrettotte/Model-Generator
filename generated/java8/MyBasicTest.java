@@ -7,15 +7,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.Set;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MyBasicTest extends Thing {
 
     private float[] myNumArray;
+    private List<Float> myNumArray2;
     private Set<Float> myNumSet;
     private List<String> myStringList;
     private Integer myInt;
@@ -25,6 +26,7 @@ public class MyBasicTest extends Thing {
 
     public MyBasicTest() {
         this.myNumArray = new float[10];
+        this.myNumArray2 = new ArrayList<Float>();
         this.myNumSet = new HashSet<Float>();
         this.myStringList = new ArrayList<String>();
         this.myNestedList = new ArrayList<HashSet<Address>>();
@@ -37,6 +39,15 @@ public class MyBasicTest extends Thing {
     @JsonProperty("myNumArray")
     public void setMyNumArray(final float[] myNumArray) {
         this.myNumArray = myNumArray;
+    }
+
+    @JsonProperty("myNumArray2")
+    public List<Float> getMyNumArray2() {
+        return this.myNumArray2;
+    }
+    @JsonProperty("myNumArray2")
+    public void setMyNumArray2(final List<Float> myNumArray2) {
+        this.myNumArray2 = myNumArray2;
     }
 
     @JsonProperty("myNumSet")
