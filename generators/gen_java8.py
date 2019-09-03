@@ -5,7 +5,7 @@ from .model import Model,Property
 class gen_java8:
 
     def __init__(self, config, lang_config):
-        self.project_pkg = config['jvmPackage']
+        self.project_pkg = lang_config["namespace"]
         self.annotation_config = None
         if "annotation" in lang_config.keys():
             self.annotation_config = lang_config["annotation"]

@@ -34,9 +34,12 @@ def split_path(subdir, root):
 
 def make_dir_path(lang, obj_path):
     utils.mkdir_ine(lang["output"])
-    dir_path = lang["output"] + '/' + '/'.join(obj_path.split('/')[0:-1])
+    dir_path = lang["output"] + '/'
     if lang["namingConvention"] == "jvm":
-        dir_path = dir_path.lower()
+        ns = lang["namespace"].replace('.','/').lower() + '/'
+        utils.mkdir_ine(lang["output"] + '/' + ns)
+        dir_path = dir_path.lower() + ns
+    dir_path += '/'.join(obj_path.split('/')[0:-1])
     utils.mkdir_ine(dir_path)
     return dir_path
 
