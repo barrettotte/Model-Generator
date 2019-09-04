@@ -1,9 +1,10 @@
 import os
 import utils as utils
 
-from generators.gen_groovy import gen_groovy
-from generators.gen_java8  import gen_java8
-from generators.gen_kotlin import gen_kotlin
+from generators.gen_groovy     import gen_groovy
+from generators.gen_java8      import gen_java8
+from generators.gen_kotlin     import gen_kotlin
+from generators.gen_typescript import gen_typescript
 
 
 def get_config(path):
@@ -26,9 +27,10 @@ def parse_schema(generator, schema, obj_path):
 
 def get_generator(lang, config):
     return {
-        'groovy': gen_groovy(config, lang),
-        'java8':  gen_java8(config, lang),
-        'kotlin': gen_kotlin(config, lang)
+        'groovy':     gen_groovy(config, lang),
+        'java8':      gen_java8(config, lang),
+        'kotlin':     gen_kotlin(config, lang),
+        'typescript': gen_typescript(config, lang)
     }[lang['name']]
 
 def split_path(subdir, root):

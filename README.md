@@ -1,10 +1,10 @@
 # Model-Generator
 
-
 Generate code for basic models from JSON schema for Java, Groovy, Kotlin, and TypeScript.
 
-This is kind of a naïve implementation and isn't really too great in my opinion.
-
+This is kind of a naïve implementation and isn't really too great in my opinion. I realized
+its demise after messing with a non-jvm language. I'm struggling to find a way to strip out
+common functionality with this current implementation.
 
 In the future, it would be pretty sweet to try to marry Antlr grammars and JSON Schema to generate
 classes more robustly with less generator code.
@@ -14,7 +14,7 @@ classes more robustly with less generator code.
 - [x] Java 
 - [x] Groovy
 - [x] Kotlin -> 100% positive this isn't correct, I have no practical kotlin experience yet
-- [ ] TypeScript
+- [ ] TypeScript (postponed, I don't like my current approach to generation)
 
 
 ## Possible Improvements
