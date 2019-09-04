@@ -1,13 +1,15 @@
 package com.barrettotte.models
 
-open class Thing {
-    var genres: String[] = String[10]
-    var pageLength: long = 25
+import com.barrettotte.models.common.Person
+import com.barrettotte.models.common.Thing
+
+import com.fasterxml.jackson.module.kotlin.*
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+open class Book : Thing {
+    var genres: Array<String> = Array<String>()
+    var pageLength: Long = 25L
     var isbn: String
-    var author: Personauthor = Person()
-    var price: BigDecimalprice = BigDecimal()
-}
-
-class Book {
-
+    var author: Person = Person()
+    var price: BigDecimal = BigDecimal(0)
 }

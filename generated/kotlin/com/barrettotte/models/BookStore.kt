@@ -1,9 +1,11 @@
 package com.barrettotte.models
 
-open class Building {
-    var books: List<Book>books = ArrayList<Book>()
-}
+import com.barrettotte.models.Book
+import com.barrettotte.models.Building
 
-class BookStore {
+import com.fasterxml.jackson.module.kotlin.*
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+open class BookStore : Building {
+    var books: List<Book> = MutableList<Book>()
 }

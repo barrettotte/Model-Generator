@@ -1,9 +1,11 @@
 package com.barrettotte.models
 
-open class Thing {
-    var address: Addressaddress = Address()
-}
+import com.barrettotte.models.common.Address
+import com.barrettotte.models.common.Thing
 
-class Building {
+import com.fasterxml.jackson.module.kotlin.*
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+open class Building : Thing {
+    var address: Address = Address()
 }

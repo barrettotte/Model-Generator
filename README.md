@@ -84,3 +84,5 @@ A couple of new properties were added to add more functionality.
 * https://json-schema.org/understanding-json-schema/index.html
 * https://www.jsonschemavalidator.net/
 * Inspiration https://app.quicktype.io/
+* Kotlin default imports https://stackoverflow.com/questions/40075836/what-packages-functions-are-imported-by-default-in-kotlin
+* Build a kotlin jar https://medium.com/@adrianmarkperea/understanding-gradle-by-creating-an-executable-kotlin-jar-8f554c7090c5

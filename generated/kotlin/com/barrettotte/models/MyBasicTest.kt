@@ -1,16 +1,18 @@
 package com.barrettotte.models
 
-open class Thing {
-    var myNumArray: List<float>myNumArray = ArrayList<float>()
-    var myNumArray2: float[] = float[10]
-    var myNumSet: Set<Float>myNumSet = HashSet<Float>()
-    var myStringList: List<String>myStringList = ArrayList<String>()
-    var myInt: Integer
-    var myPrimInt: int
-    var myPrimBool: boolean
-    var myNestedList: List<Set<Address>>myNestedList = ArrayList<HashSet<Address>>()
-}
+import com.barrettotte.models.common.Address
+import com.barrettotte.models.common.Thing
 
-class MyBasicTest {
+import com.fasterxml.jackson.module.kotlin.*
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+open class MyBasicTest : Thing {
+    var myNumArray: List<Float> = MutableList<Float>()
+    var myNumArray2: Array<Float> = Array<Float>()
+    var myNumSet: Set<Float> = MutableSet<Float>()
+    var myStringList: List<String> = MutableList<String>()
+    var myInt: Int
+    var myPrimInt: Int
+    var myPrimBool: Boolean
+    var myNestedList: List<Set<Address>> = MutableList<MutableSet<Address>>()
 }
