@@ -24,7 +24,7 @@ class gen_kotlin(gen_java8):
     def bld_class_dec(self, model):
         dec = "open class " + model.identifier
         if len(model.inheritance) > 0:
-            dec += " : " + model.inheritance[0].split('/')[-1]
+            dec += " : " + model.inheritance[0].split('/')[-1] + "()"
         return dec + " {"
 
     # Set default value for property

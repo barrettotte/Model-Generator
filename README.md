@@ -1,29 +1,31 @@
 # Model-Generator
 
 
-Generate code for basic models from JSON schema. 
+Generate code for basic models from JSON schema for Java, Groovy, Kotlin, and TypeScript.
+
+This is kind of a naïve implementation and isn't really too great in my opinion.
+
+
+In the future, it would be pretty sweet to try to marry Antlr grammars and JSON Schema to generate
+classes more robustly with less generator code.
 
 
 ## Languages
 - [x] Java 
 - [x] Groovy
-- [ ] Kotlin
+- [x] Kotlin -> 100% positive this isn't correct, I have no practical kotlin experience yet
 - [ ] TypeScript
-- [ ] T-SQL
-
-
-## To Do
-* unit tests for java and groovy before moving on
-* generate build files in directories
 
 
 ## Possible Improvements
+* JPA Annotations
 * Constants / final properties ?
 * Serialization
 * Builder methods
 * hashCode, toString, and equals methods
 * Parameterized constructor using 'required' on object properties
 * On a similar note, call parameterized super constructor
+* Prefix my additional JSON schema props [extends, primitive, parseTo] with a '$'
 
 
 ## Specification
