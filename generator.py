@@ -43,7 +43,7 @@ def make_dir_path(lang, obj_path):
         ns = lang["namespace"].replace('.',os.sep).lower() + os.sep
         utils.mkdir_ine(lang["output"] + os.sep + ns)
         dir_path = dir_path.lower() + ns
-    dir_path += os.sep.join(obj_path.split(os.sep)[0:-1])
+    dir_path += os.sep.join(obj_path.split('/')[:-1])
     utils.mkdir_ine(dir_path)
     return dir_path
 

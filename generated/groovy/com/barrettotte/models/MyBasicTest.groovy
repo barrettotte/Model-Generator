@@ -15,10 +15,10 @@ import java.util.HashSet
 class MyBasicTest extends Thing {
 
     @JsonProperty("myNumArray")
-    List<float> myNumArray = new ArrayList<float>()
+    List<Float> myNumArray = new ArrayList<Float>()
 
     @JsonProperty("myNumArray2")
-    float[] myNumArray2 = new float[10]
+    Float[] myNumArray2 = new Float[10]
 
     @JsonProperty("myNumSet")
     Set<Float> myNumSet = new HashSet<Float>()

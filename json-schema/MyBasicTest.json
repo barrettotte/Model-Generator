@@ -9,7 +9,6 @@
             "type": "array",
             "items": {
                 "type": "number",
-                "primitive": true,
                 "maxItems": 10
             }
         },
@@ -18,8 +17,7 @@
             "primitive": true,
             "items": {
                 "type": "number",
-                "maxItems": 10,
-                "primitive": true
+                "maxItems": 10
             }
         },
         "myNumSet": {

@@ -14,8 +14,8 @@ import java.util.HashSet;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MyBasicTest extends Thing {
 
-    private List<float> myNumArray;
-    private float[] myNumArray2;
+    private List<Float> myNumArray;
+    private Float[] myNumArray2;
     private Set<Float> myNumSet;
     private List<String> myStringList;
     private Integer myInt;
@@ -24,28 +24,28 @@ public class MyBasicTest extends Thing {
     private List<Set<Address>> myNestedList;
 
     public MyBasicTest() {
-        this.myNumArray = new ArrayList<float>();
-        this.myNumArray2 = new float[10];
+        this.myNumArray = new ArrayList<Float>();
+        this.myNumArray2 = new Float[10];
         this.myNumSet = new HashSet<Float>();
         this.myStringList = new ArrayList<String>();
         this.myNestedList = new ArrayList<HashSet<Address>>();
     }
 
     @JsonProperty("myNumArray")
-    public List<float> getMyNumArray() {
+    public List<Float> getMyNumArray() {
         return this.myNumArray;
     }
     @JsonProperty("myNumArray")
-    public void setMyNumArray(final List<float> myNumArray) {
+    public void setMyNumArray(final List<Float> myNumArray) {
         this.myNumArray = myNumArray;
     }
 
     @JsonProperty("myNumArray2")
-    public float[] getMyNumArray2() {
+    public Float[] getMyNumArray2() {
         return this.myNumArray2;
     }
     @JsonProperty("myNumArray2")
-    public void setMyNumArray2(final float[] myNumArray2) {
+    public void setMyNumArray2(final Float[] myNumArray2) {
         this.myNumArray2 = myNumArray2;
     }
 
