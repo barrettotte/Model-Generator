@@ -1,14 +1,12 @@
 import warnings
 import utils as utils
 from .model import Model,Property
+from .gen_base import gen_base
 
-class gen_java8:
+class gen_java8(gen_base):
 
     def __init__(self, config, lang_config):
-        self.project_pkg = lang_config["namespace"]
-        self.annotation_config = None
-        if "annotation" in lang_config.keys():
-            self.annotation_config = lang_config["annotation"]
+        gen_base.__init__(self, config, lang_config)
 
     # Parse schema and build model
     def generate(self, schema, obj_path):
