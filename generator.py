@@ -1,9 +1,9 @@
 import os
 import utils as utils
 
-from generators.gen_groovy     import gen_groovy
-from generators.gen_java8      import gen_java8
-from generators.gen_kotlin     import gen_kotlin
+from generators.gen_groovy    import gen_groovy
+from generators.gen_java8     import gen_java8
+from generators.gen_kotlin    import gen_kotlin
 from generators.gen_typescript import gen_typescript
 
 
@@ -42,7 +42,10 @@ def make_dir_path(lang, obj_path):
     utils.mkdir_ine(lang["output"])
     dir_path = lang["output"] + os.sep
     if lang["namingConvention"] == "jvm":
-        ns = lang["namespace"].replace('.',os.sep).lower() + os.sep
+        if "namespace" in lang: 
+            ns = lang["namespace"].replace('.',os.sep).lower() + os.sep
+        else: 
+            ns = ''
         utils.mkdir_ine(lang["output"] + os.sep + ns)
         dir_path = dir_path.lower() + ns
     dir_path += os.sep.join(obj_path.split('/')[:-1])

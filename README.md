@@ -14,7 +14,7 @@ classes more robustly with less generator code.
 - [x] Java 
 - [x] Groovy
 - [x] Kotlin -> 100% positive this isn't correct, I have no practical kotlin experience yet
-- [ ] TypeScript (postponed, I don't like my current approach to generation)
+- [x] TypeScript
 
 
 ## Possible Improvements
