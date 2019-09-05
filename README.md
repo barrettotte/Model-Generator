@@ -90,6 +90,8 @@ A couple of new properties were added to add more functionality.
 
 
 ## Commands
+* Generate ```python generate.py```
+* Generate with gradle ```gradle generate```
 * Run tests ```python -m unittest```
 * Test build Java Jar ```./tests-build/test-java.sh```
 * Test build Groovy Jar ```./tests-build/test-groovy.sh```

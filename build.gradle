@@ -1,0 +1,13 @@
+// Showing this can be ran as a gradle task
+
+task generate(type:Exec) {
+  workingDir './'
+  commandLine 'cmd', '/c', 'python', 'generator.py'
+
+  //store the output instead of printing to the console:
+  standardOutput = new ByteArrayOutputStream()
+ 
+  ext.output = {
+    return standardOutput.toString()
+  }
+}
