@@ -17,6 +17,12 @@ classes more robustly with less generator code.
 - [x] TypeScript
 
 
+## Future Additions
+* SQL Create scripts
+* C#
+* Python
+* Go
+
 ## Possible Improvements
 * JPA Annotations
 * Constants / final properties ?
