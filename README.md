@@ -2,36 +2,43 @@
 
 Generate code for basic models from JSON schema for Java, Groovy, Kotlin, and TypeScript.
 
+
 This is kind of a naïve implementation and isn't really too great in my opinion. I realized
 its demise after messing with a non-jvm language. I'm struggling to find a way to strip out
 common functionality with this current implementation.
+
 
 In the future, it would be pretty sweet to try to marry Antlr grammars and JSON Schema to generate
 classes more robustly with less generator code.
 
 
-## Languages
+## Implemented Languages
 - [x] Java 
 - [x] Groovy
-- [x] Kotlin -> 100% positive this isn't correct, I have no practical kotlin experience yet
+- [x] Kotlin -> 100% positive this isn't correct, I have no practical kotlin experience yet... will revisit
 - [x] TypeScript
 
 
-## Future Additions
-* SQL Create scripts
-* C#
+## Future Implementations ... When I feel like it
+* T-SQL creation scripts
 * Python
+* Ruby
+* C#
+* ColdFusion (purely just masochism at this point)
+* Scala
 * Go
 
+
 ## Possible Improvements
+* **DateTime** - I thought I had implemented this...might be going crazy
+* **Parameterized constructor using 'required' on object properties**
+* **On a similar note, call parameterized super constructor**
+* Prefix my additional JSON schema props [extends, primitive, parseTo] with a '$'
 * JPA Annotations
 * Constants / final properties ?
 * Serialization
-* Builder methods
+* Builder methods ->  myModel.withProp1("wasd")
 * hashCode, toString, and equals methods
-* Parameterized constructor using 'required' on object properties
-* On a similar note, call parameterized super constructor
-* Prefix my additional JSON schema props [extends, primitive, parseTo] with a '$'
 
 
 ## Specification
@@ -84,6 +91,9 @@ A couple of new properties were added to add more functionality.
 
 ## Commands
 * Run tests ```python -m unittest```
+* Test build Java Jar ```./tests-build/test-java.sh```
+* Test build Groovy Jar ```./tests-build/test-groovy.sh```
+* Test build Kotlin Jar ```./tests-build/test-kotlin.sh```
 
 
 ## References
