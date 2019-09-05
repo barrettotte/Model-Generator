@@ -42,7 +42,7 @@ class gen_typescript(gen_base):
         lines.append('\n' + self.bld_class_dec(model))
         for p in model.properties:
             if p.default:
-                prop = ": " + p.kind + " = " + ("'" + str(p.default) + "'" if p.kind == "string" else str(p.default))
+                prop = " = " + ("'" + str(p.default) + "'" if p.kind == "string" else str(p.default))
             else:
                 prop = "?: " + p.kind
             lines.append("    " + p.identifier + prop + ";")
